@@ -4,7 +4,12 @@ do_wasp_downloader() {
 	echo " - do_wasp_downloader - "
 	/usr/bin/wasp_downloader eth0 /tmp/overlay.tar.gz
 	cd /
-	tar xzf /tmp/overlay.tar.gz
+	if [ -e /tmp/overlay.tar.gz ]; then
+	  tar xzf /tmp/overlay.tar.gz
+	  if [ -e /usr/bin/wasp_script ]; then
+	    /usr/bin/wasp_script
+	  fi
+	fi
 }
 
 boot_hook_add initramfs do_wasp_downloader
