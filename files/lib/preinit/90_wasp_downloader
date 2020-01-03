@@ -7,4 +7,4 @@ do_wasp_downloader() {
 	tar xzf /tmp/overlay.tar.gz
 }
 
-boot_hook_add preinit_main do_wasp_downloader
+boot_hook_add initramfs do_wasp_downloader
