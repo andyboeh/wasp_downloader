@@ -1,0 +1,9 @@
+#!/bin/sh
+
+do_wasp_downloader() {
+	/usr/bin/wasp_downloader eth0 /tmp/overlay.tar.gz
+	cd /
+	tar xzf /tmp/overlay.tar.gz
+}
+
+boot_hook_add preinit_main do_wasp_downloader
