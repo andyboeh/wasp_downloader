@@ -196,7 +196,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* Bind to device */
-	if (setsockopt(sockfd, SOL_SOCKET, SO_BINDTODEVICE, argv[2], IFNAMSIZ-1) == -1)	{
+	if (setsockopt(sockfd, SOL_SOCKET, SO_BINDTODEVICE, argv[1], IFNAMSIZ-1) == -1)	{
 		perror("SO_BINDTODEVICE");
 		close(sockfd);
 		exit(EXIT_FAILURE);
@@ -212,7 +212,7 @@ int main(int argc, char *argv[]) {
 		s_packet.packet_start = PACKET_START;
 		switch(m_state) {
 			case STATE_DISCOVERING:
-				s_packet.response = RESP_DISCOVER;
+				s_packet.response = RESP_CONFIG;
 				for(int i=0; i<6; i++) {
 					dest[i] = 0xff;
 				}
@@ -268,13 +268,13 @@ int main(int argc, char *argv[]) {
 					continue;
 				}
 			}
+			fwrite(packet->payload, numbytes - sizeof(struct ether_header) - WASP_HEADER_LEN, 1, fp);
 			if(packet->response == CMD_START_FIRMWARE) {
-				fwrite(packet->payload, numbytes - sizeof(struct ether_header) - WASP_HEADER_LEN - 4, 1, fp);
 				m_state = STATE_FINISHED;
 				fclose(fp);
 				fp = NULL;
 			} else  {
-				fwrite(packet->payload, numbytes - sizeof(struct ether_header) - WASP_HEADER_LEN, 1, fp);
+				m_state = STATE_TRANSFERRING;
 			}
 		}
 	}
